@@ -26,7 +26,7 @@ technical test
 ### Installation
     ### make a virtual enviroment ###
     virtualenv -p python3 venv
-     source venv/bn/activate
+    source venv/bn/activate
 
     ### Install RabbitMQ ###
     sudo apt-get install rabbitmq-server

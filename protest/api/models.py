@@ -25,7 +25,7 @@ class TimeStampModel(models.Model):
 
 
 def upload_to(instance, filename):
-    return 'images/{filename}'.format(filename=filename)
+    return '{filename}'.format(filename=filename)
 
 
 class Job(TimeStampModel):

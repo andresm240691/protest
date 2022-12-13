@@ -15,6 +15,7 @@ jedi==0.18.2
 kombu==5.2.4
 packaging==21.3
 parso==0.8.3
+Pillow==9.3.0
 prompt-toolkit==3.0.36
 psycopg2-binary==2.9.5
 pudb==2022.1.3
