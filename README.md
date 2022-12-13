@@ -21,6 +21,7 @@ technical test
     export ALLOWED_HOSTS=*
     export LOG_PATH='<str_path>/debug.log'
     export STATIC_ROOT='<str_path>/statics'
+    export MEDIA_ROOT='<str_path>/media'
     
 ### Installation
     ### make a virtual enviroment ###

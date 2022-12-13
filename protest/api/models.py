@@ -11,8 +11,8 @@ STEPS_CHOICES = [
 STATUS_CHOICES = [
     ('successful', 'SUCCESSFUL'),
     ('in_process', 'IN PROCESS'),
-    ('processed', 'Processed'),
-    ('failed', 'Failed'),
+    ('processed', 'PROCESSED'),
+    ('failed', 'FAILED'),
 ]
 
 
@@ -24,15 +24,19 @@ class TimeStampModel(models.Model):
         abstract = True
 
 
+def upload_to(instance, filename):
+    return 'images/{filename}'.format(filename=filename)
+
+
 class Job(TimeStampModel):
     job_id = models.UUIDField(
          default=uuid.uuid4,
          editable=False
     )
-    img_src = models.CharField(
-        null=True,
+    image_url = models.ImageField(
+        upload_to=upload_to,
         blank=True,
-        max_length=250
+        null=True
     )
 
 
