@@ -8,7 +8,7 @@ technical test
 * rabbitmq-server
 
 
-### Enviroments ###
+### Environments ###
 
     ### Database Postgres SQL ### 
     export DB_NAME=protest
@@ -24,9 +24,10 @@ technical test
     export MEDIA_ROOT='<str_path>/media'
     
 ### Installation
+
     ### make a virtual enviroment ###
     virtualenv -p python3 venv
-    source venv/bn/activate
+    source venv/bin/activate
 
     ### Install RabbitMQ ###
     sudo apt-get install rabbitmq-server
@@ -37,7 +38,16 @@ technical test
 
     ### Install the requirements ###
     pip install -r requirements.txt
-    
+
+### Migrate Database ###
+    python manage.py makemigrations
+    python manage.py migrate
+    python manage.py collectstatic
+
+### Create User ####
+    python manage.py createsuperuser
+        - username: admin
+        - password: admin 
 
 ### Execute celery 
     Note: Eexecute in other terminal
@@ -49,12 +59,4 @@ technical test
     ### Run celery ###
     celery -A protest worker -l INFO
 
-### Migrate Database ###
-    python manage.py makemigrations
-    python manage.py migrate
-    python manage.py collectstatic
 
-### Create User ####
-    python manage.py createsuperuser
-        - username: admin
-        - password: admin
