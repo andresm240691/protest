@@ -1,69 +1,47 @@
 import uuid
 import logging
-from .models import Step
 from PIL import Image, ImageChops
 from protest.settings import MEDIA_ROOT
 
 
-def invert_colors(job):
+def transform_image(job, action):
     """
-    Step 1: Invert the colors
+    function to apply the following transformations
+    1. Invert the colors
+    2. Go to Black and White
+    3. Rotate the image 90 degrees
+    4. And invert the about the vertical axis.
     :params job {Queryset}
+    :params action {String}
+    :return response {object}
     """
-    execute_status = False
+    response = {'execute_status': 'successful', 'job': job}
 
-    # Create initial step IN PROCESS
-    step_query = Step.create_step(
-        job=job,
-        status_code='process',
-        step_code='invert_colors'
-    )
     try:
-        import pudb;pudb.set_trace()
         img = Image.open(job.image_url.path)
-        inv_img = ImageChops.invert(img)
+        if action == 'invert_colors':
+            new_image = ImageChops.invert(img)
+        if action == 'black_and_white':
+            new_image = img.convert("1")
+        if action == 'rotate_image':
+            new_image = img.rotate(90)
+        if action == 'invert_vertical_axis':
+            new_image = img.transpose(Image.TRANSPOSE)
+
         new_img_name = str(uuid.uuid4()) + '.' + img.format
         new_path = '{media_root}/{filename}'.format(
             media_root=MEDIA_ROOT, filename=new_img_name)
-        inv_img.save(new_path)
-        job.image_url.detele()
+        new_image.save(new_path)
+
+        job.image_url.delete()
         job.image_url = new_path
         job.save()
+
         # Update Step
-        execute_status = True
-        step_query.update_step(job=job, fail=False)
+        response.update(job=job)
+
     except Exception:
-        step_query.update_step(job=job, fail=True)
-        logging.exception('Exception in invert_colors')
+        response.update(execute_status='fail', job=job)
+        logging.exception('Exception in transform_image')
 
-    return execute_status
-
-
-def black_and_white(job):
-    response = {'status': False, 'image': None}
-    try:
-        pass
-    except Exception:
-        logging.exception('Exception in black_and_white')
-    finally:
-        return response
-
-
-def rotate_image(job):
-    response = {'status': False, 'image': None}
-    try:
-        pass
-    except Exception:
-        logging.exception('Exception in rotate_image')
-    finally:
-        return response
-
-
-def invert_vertical_axis(job):
-    response = {'status': False, 'image': None}
-    try:
-        pass
-    except Exception:
-        logging.exception('Exception in invert_vertical_axis')
-    finally:
-        return response
+    return response

@@ -1,4 +1,3 @@
-import datetime
 import logging
 import uuid
 from django.db import models
@@ -65,27 +64,19 @@ class Step(models.Model):
     )
 
     @staticmethod
-    def create_step(job, step_code, status_code):
+    def create_step(job, step_code, status_code, end_date=None):
         try:
             step = Step(
                 description=STEPS_CHOICES.get(step_code),
                 status=STATUS_CHOICES.get(status_code),
-                jobs=job
+                jobs=job,
+                end_date=end_date
             )
             step.save()
             return step
         except Exception:
             logging.exception('Exception in Step Model')
             return None
-
-    @staticmethod
-    def update_step(job, fail=False):
-        if not fail:
-            job.status = 'successful'
-        else:
-            job.status = 'failed'
-        job.end_date = datetime.datetime.today()
-        job.save()
 
 
 class Log(TimeStampModel):

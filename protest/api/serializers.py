@@ -29,9 +29,9 @@ class JobSerializer(serializers.ModelSerializer):
     job_id = serializers.SerializerMethodField()
 
     def get_steps(self, obj):
-        steps_query = Step.objects.filter(jobs=obj.id).first()
+        steps_query = Step.objects.filter(jobs_id=obj.id).all()
         if steps_query:
-            return StepSerializer(steps_query).data
+            return StepSerializer(steps_query, many=True).data
         return None
 
     def get_job_id(self, obj):
