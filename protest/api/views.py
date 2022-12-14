@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import (
     UploadSerializer,
-    JobSerializer
+    JobSerializer,
+    UpdateJobSerializer
 )
 from rest_framework.viewsets import ViewSet
 from .models import Job
@@ -57,10 +58,9 @@ class JobApiView(ViewSet):
         """
         try:
             action = request.data.get('action')
-            queryset = Job.objects.get(id=pk)
-            process_image(job_query=queryset, action=action)
+            process_image(job_id=pk, execute_actions=action)
             update_job = Job.objects.get(id=pk)
-            serializer = JobSerializer(update_job)
+            serializer = UpdateJobSerializer(update_job)
             return Response(serializer.data)
         except Exception:
             logging.exception('Exception in {}'.format(
