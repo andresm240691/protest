@@ -36,11 +36,11 @@ class JobApiView(ViewSet):
         """
         try:
             file_uploaded = request.FILES.get('file')
-            #  Creating new job for process image
+            #  Creating a new job to process the image
             new_job = Job.objects.create(image_url=file_uploaded)
             new_job.save()
-            # Call celery task
-            process_image(new_job)
+            # Execute celery task
+            process_image.delay(job_id=new_job.id)
             response = {'job_id': new_job.id}
             return Response(response, status=status.HTTP_201_CREATED)
         except Exception:
