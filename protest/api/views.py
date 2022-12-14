@@ -4,10 +4,14 @@ from rest_framework import status
 from .serializers import (
     UploadSerializer,
     JobSerializer,
-    UpdateJobSerializer
+    UpdateJobSerializer,
+    LogSerializer
 )
-from rest_framework.viewsets import ViewSet
-from .models import Job
+from rest_framework.viewsets import (
+    ViewSet,
+    ModelViewSet
+)
+from .models import Job, Log
 from .task import process_image
 
 
@@ -69,3 +73,25 @@ class JobApiView(ViewSet):
                 {'message': 'Bad Request'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+class LogApiView(ModelViewSet):
+    queryset = Log.objects.all()
+    serializer_class = LogSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if self.request.query_params.get('start_date'):
+            start_date = self.request.query_params.get('start_date')
+            queryset = queryset.filter(created_date__date__gte=start_date)
+
+        if self.request.query_params.get('end_date'):
+            end_date = self.request.query_params.get('end_date')
+            queryset = queryset.filter(created_date__date__lte=end_date)
+
+        return queryset
+
+
+
+

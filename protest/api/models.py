@@ -80,13 +80,12 @@ class Step(models.Model):
 
 
 class Log(TimeStampModel):
-    jobs = models.ForeignKey(
-        Job,
-        on_delete=models.CASCADE
+    job_id = models.IntegerField(
+        null=True
     )
-    steps = models.ForeignKey(
-        Step,
-        on_delete=models.CASCADE
+    step_description = models.CharField(
+        max_length=250,
+        null=True
     )
     error = models.CharField(
         max_length=250,

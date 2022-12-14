@@ -2,6 +2,7 @@ import uuid
 import logging
 from PIL import Image, ImageChops
 from protest.settings import MEDIA_ROOT
+from .models import Log, STEPS_CHOICES
 
 
 def transform_image(job, action):
@@ -40,7 +41,13 @@ def transform_image(job, action):
         # Update Step
         response.update(job=job)
 
-    except Exception:
+    except Exception as e:
+        log_query = Log(
+            job_id=job.id,
+            error=str(e),
+            step_description=STEPS_CHOICES.get(action)
+        )
+        log_query.save()
         response.update(execute_status='fail', job=job)
         logging.exception('Exception in transform_image')
 

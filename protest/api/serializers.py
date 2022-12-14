@@ -2,6 +2,7 @@ from rest_framework import serializers
 from api.models import (
     Job,
     Step,
+    Log
 )
 
 
@@ -70,16 +71,10 @@ class UpdateJobSerializer(serializers.ModelSerializer):
 
 
 class LogSerializer(serializers.ModelSerializer):
-    step = StepSerializer(read_only=True)
-    job = JobSerializer(read_only=True)
 
     class Meta:
-        model = Job
-        fields = [
-            'job',
-            'step',
-            'error'
-        ]
+        model = Log
+        fields = '__all__'
 
 
 class UploadSerializer(serializers.ModelSerializer):
