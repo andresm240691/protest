@@ -42,6 +42,8 @@ technical test
 ### Migrate Database ###
     python manage.py makemigrations
     python manage.py migrate
+
+### Static Files ###
     python manage.py collectstatic
 
 ### Create User ####
