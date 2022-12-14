@@ -2,9 +2,6 @@ from rest_framework import serializers
 from api.models import (
     Job,
     Step,
-    Log,
-    STATUS_CHOICES,
-    STEPS_CHOICES
 )
 
 

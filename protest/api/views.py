@@ -6,7 +6,8 @@ from .serializers import (
     JobSerializer
 )
 from rest_framework.viewsets import ViewSet
-from .models import Job
+from .models import Job, Step
+from .task import process_image
 
 
 class JobApiView(ViewSet):
@@ -29,8 +30,11 @@ class JobApiView(ViewSet):
     def create(self, request):
         try:
             file_uploaded = request.FILES.get('file')
+            #  Creating new job for process image
             new_job = Job.objects.create(image_url=file_uploaded)
             new_job.save()
+            # Call celery task
+            process_image(new_job)
             response = {'job_id': new_job.id}
             return Response(response, status=status.HTTP_201_CREATED)
         except Exception:
